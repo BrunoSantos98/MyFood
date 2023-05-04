@@ -7,9 +7,11 @@ import com.MyFood.model.ItensCardapio;
 import com.MyFood.model.RestaurantModel;
 import com.MyFood.repository.RestaurantRepository;
 import com.MyFood.services.RestaurantServices;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class RestaurantServicesImplementation implements RestaurantServices {
 
     private final RestaurantRepository repository;
