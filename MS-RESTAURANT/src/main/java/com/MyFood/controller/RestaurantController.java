@@ -1,12 +1,14 @@
 package com.MyFood.controller;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.MyFood.dto.RestaurantMenuDto;
+import com.MyFood.dto.RestaurantsNameDto;
+import org.springframework.http.ResponseEntity;
 
-@RestController
-@RequestMapping("/restaurants/v1")
-@CrossOrigin(origins = "*", maxAge = 3600)
+import java.util.List;
+
+
 public interface RestaurantController {
 
+    ResponseEntity<List<RestaurantsNameDto>> getAllRestaurantsName();
+    ResponseEntity<RestaurantMenuDto> getRestaurantMenu(String name);
 }
