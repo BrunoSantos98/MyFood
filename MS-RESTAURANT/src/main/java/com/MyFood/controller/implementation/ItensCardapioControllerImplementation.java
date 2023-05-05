@@ -20,7 +20,7 @@ public class ItensCardapioControllerImplementation implements ItensCardapioContr
     }
 
     @Override
-    @GetMapping
+    @PostMapping
     public ResponseEntity<List<MenuDto>> getOrderedProductsList(@RequestBody List<String> list) {
         return ResponseEntity.ok(service.getListOfProducts(list));
     }

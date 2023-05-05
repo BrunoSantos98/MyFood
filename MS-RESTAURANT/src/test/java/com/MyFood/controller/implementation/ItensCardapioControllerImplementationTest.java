@@ -39,7 +39,7 @@ class ItensCardapioControllerImplementationTest {
     void shoudlBeReturnListOfProductsSelected() throws Exception {
         given(service.getListOfProducts(productsName)).willReturn(orderedProducList);
 
-        mockMvc.perform(get(url).contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(productsName)))
+        mockMvc.perform(post(url).contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(productsName)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().string(mapper.writeValueAsString(orderedProducList)))
