@@ -1,7 +1,7 @@
 package com.MyFood.controller.implementation;
 
 import com.MyFood.controller.ItensCardapioController;
-import com.MyFood.dto.MenuDto;
+import com.MyFood.dto.OrderRestaurantDto;
 import com.MyFood.services.ItensCardapioService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class ItensCardapioControllerImplementation implements ItensCardapioContr
 
     @Override
     @PostMapping
-    public ResponseEntity<List<MenuDto>> getOrderedProductsList(@RequestBody List<String> list) {
+    public ResponseEntity<List<OrderRestaurantDto>> getOrderedProductsList(@RequestBody List<String> list) {
         return ResponseEntity.ok(service.getListOfProducts(list));
     }
 }

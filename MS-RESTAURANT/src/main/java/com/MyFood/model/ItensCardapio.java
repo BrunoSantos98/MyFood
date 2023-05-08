@@ -1,5 +1,6 @@
 package com.MyFood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -16,6 +17,8 @@ public class ItensCardapio {
     private String name;
     @Column(nullable = false, length = 10)
     private double value;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private RestaurantModel restaurant;
 
     public ItensCardapio() {
     }
@@ -29,21 +32,23 @@ public class ItensCardapio {
     public UUID getId() {
         return id;
     }
-
     public void setId(UUID id) {
         this.id = id;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public double getValue() {
         return value;
+    }
+    public RestaurantModel getRestaurant() {
+        return restaurant;
+    }
+    public void setRestaurant(RestaurantModel restaurant) {
+        this.restaurant = restaurant;
     }
 
     public void setValue(double value) {

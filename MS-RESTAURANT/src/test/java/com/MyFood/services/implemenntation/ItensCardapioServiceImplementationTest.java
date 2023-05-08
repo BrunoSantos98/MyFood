@@ -1,6 +1,6 @@
 package com.MyFood.services.implemenntation;
 
-import com.MyFood.dto.MenuDto;
+import com.MyFood.dto.OrderRestaurantDto;
 import com.MyFood.model.ItensCardapio;
 import com.MyFood.repository.ItensCardapioRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ class ItensCardapioServiceImplementationTest{
         given(repository.findByName(item01.getName())).willReturn(item01);
         given(repository.findByName(item02.getName())).willReturn(item02);
 
-        List<MenuDto> listItens = implementation.getListOfProducts(productsName);
+        List<OrderRestaurantDto> listItens = implementation.getListOfProducts(productsName);
 
         verify(repository,times(1)).findByName(item01.getName());
         verify(repository,times(1)).findByName(item02.getName());

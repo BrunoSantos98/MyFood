@@ -1,4 +1,4 @@
 package com.MyFood.dto;
 
-public record MenuDto(String name, double value) {
+public record MenuDto(String  name, double value) {
 }

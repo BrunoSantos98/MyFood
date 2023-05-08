@@ -1,9 +1,9 @@
 package com.MyFood.services;
 
-import com.MyFood.dto.MenuDto;
+import com.MyFood.dto.OrderRestaurantDto;
 
 import java.util.List;
 
 public interface ItensCardapioService {
-    List<MenuDto> getListOfProducts(List<String> productsName);
+    List<OrderRestaurantDto> getListOfProducts(List<String> productsName);
 }

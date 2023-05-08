@@ -1,5 +1,6 @@
 package com.MyFood.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -15,8 +16,8 @@ public class RestaurantModel {
     private UUID restaurantId;
     @Column(nullable = false, length = 75)
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "RestaurantId")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "restaurant")
+    @JsonIgnore
     private List<ItensCardapio> cardapio;
 
     public RestaurantModel() {
@@ -31,27 +32,21 @@ public class RestaurantModel {
     public UUID getRestaurantId() {
         return restaurantId;
     }
-
     public void setRestaurantId(UUID restaurantId) {
         this.restaurantId = restaurantId;
     }
-
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
-
     public List<ItensCardapio> getCardapio() {
         return cardapio;
     }
-
     public void setCardapio(List<ItensCardapio> cardapio) {
         this.cardapio = cardapio;
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
