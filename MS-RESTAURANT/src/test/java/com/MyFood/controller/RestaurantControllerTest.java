@@ -1,6 +1,7 @@
 package com.MyFood.controller;
 
 import com.MyFood.controller.implementation.RestaurantControllerImplementation;
+import com.MyFood.dto.MenuDto;
 import com.MyFood.dto.OrderRestaurantDto;
 import com.MyFood.dto.RestaurantMenuDto;
 import com.MyFood.dto.RestaurantsNameDto;
@@ -37,8 +38,8 @@ class RestaurantControllerTest {
     private ObjectMapper mapper = new ObjectMapper();
 
     private String url = "/restaurants/v1";
-    private OrderRestaurantDto item01 = new OrderRestaurantDto("Pizza", 50.00);
-    private OrderRestaurantDto item02 = new OrderRestaurantDto("Picanha", 80.00);
+    private MenuDto item01 = new MenuDto("Pizza", 50.00);
+    private MenuDto item02 = new MenuDto("Picanha", 80.00);
     private RestaurantsNameDto restaurante = new RestaurantsNameDto("Maciota");
     private RestaurantsNameDto restaurante02 = new RestaurantsNameDto("Kevelin");
     private RestaurantMenuDto restaurante03 = new RestaurantMenuDto("Maciota", List.of(item01, item02));

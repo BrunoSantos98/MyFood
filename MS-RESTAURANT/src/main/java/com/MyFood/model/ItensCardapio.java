@@ -23,10 +23,11 @@ public class ItensCardapio {
     public ItensCardapio() {
     }
 
-    public ItensCardapio(UUID id, String name, double value) {
+    public ItensCardapio(UUID id, String name, double value, RestaurantModel restaurant) {
         this.id = id;
         this.name = name;
         this.value = value;
+        this.restaurant = restaurant;
     }
 
     public UUID getId() {

@@ -29,8 +29,8 @@ class ItensCardapioControllerImplementationTest {
     @Autowired
     MockMvc mockMvc;
     private ObjectMapper mapper = new ObjectMapper();
-    private OrderRestaurantDto item01 = new OrderRestaurantDto("Pizza", 50.00);
-    private OrderRestaurantDto item02 = new OrderRestaurantDto("Picanha", 80.00);
+    private OrderRestaurantDto item01 = new OrderRestaurantDto("Tsc","Pizza", 50.00);
+    private OrderRestaurantDto item02 = new OrderRestaurantDto("Tsc", "Picanha", 80.00);
     List<String> productsName = List.of(item01.name(), item02.name());
     List<OrderRestaurantDto> orderedProducList = List.of(item01, item02);
     String url = "/menu/v1";

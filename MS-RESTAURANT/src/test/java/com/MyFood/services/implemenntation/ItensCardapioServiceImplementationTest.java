@@ -2,6 +2,7 @@ package com.MyFood.services.implemenntation;
 
 import com.MyFood.dto.OrderRestaurantDto;
 import com.MyFood.model.ItensCardapio;
+import com.MyFood.model.RestaurantModel;
 import com.MyFood.repository.ItensCardapioRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,8 +25,8 @@ class ItensCardapioServiceImplementationTest{
     private ItensCardapioRepository repository;
     @InjectMocks
     private ItensCardapioServiceImplementation implementation;
-    private ItensCardapio item01 = new ItensCardapio(UUID.randomUUID(), "Pizza", 50.00);
-    private ItensCardapio item02 = new ItensCardapio(UUID.randomUUID(), "Picanha", 80.00);
+    private ItensCardapio item01 = new ItensCardapio(UUID.randomUUID(), "Pizza", 50.00, new RestaurantModel(UUID.randomUUID(), "Tsc", new ArrayList<>()));
+    private ItensCardapio item02 = new ItensCardapio(UUID.randomUUID(), "Picanha", 80.00,new RestaurantModel(UUID.randomUUID(), "Tsc", new ArrayList<>()));
     List<String> productsName = List.of(item01.getName(), item02.getName());
     @Test
     @DisplayName("Deve retornar lista de Pedidos")

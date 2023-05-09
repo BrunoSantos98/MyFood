@@ -13,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,8 +30,8 @@ class RestaurantServicesTest {
     private RestaurantRepository repository;
     @InjectMocks
     private RestaurantServicesImplementation service;
-    private ItensCardapio item01 = new ItensCardapio(UUID.randomUUID(), "Pizza", 50.00);
-    private ItensCardapio item02 = new ItensCardapio(UUID.randomUUID(), "Picanha", 80.00);
+    private ItensCardapio item01 = new ItensCardapio(UUID.randomUUID(), "Pizza", 50.00, new RestaurantModel(UUID.randomUUID(), "Tsc", new ArrayList<>()));
+    private ItensCardapio item02 = new ItensCardapio(UUID.randomUUID(), "Picanha", 80.00, new RestaurantModel(UUID.randomUUID(), "Tsc", new ArrayList<>()));
     private RestaurantModel restaurante = new RestaurantModel(UUID.randomUUID(), "Maciota", List.of(item01, item02));
     private RestaurantModel restaurante02 = new RestaurantModel(UUID.randomUUID(), "Kevelin", List.of(item01, item02));
     @Test
