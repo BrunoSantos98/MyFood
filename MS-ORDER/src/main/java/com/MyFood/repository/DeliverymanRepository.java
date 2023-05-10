@@ -9,4 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface DeliverymanRepository extends JpaRepository<Deliveryman, UUID> {
+    boolean existsByCpf(String cpf);
+    boolean existsByLicensePlate(String licensePlate);
 }
