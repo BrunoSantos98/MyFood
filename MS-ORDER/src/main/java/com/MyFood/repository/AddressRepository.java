@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.UUID;
 
 public interface AddressRepository extends JpaRepository<AddressModel, UUID> {
-    AddressModel findByCepAndLogradouroAndnumber(String cep, String logradouro, short number);
-    boolean existsByCepAndLogradouroAndnumber(String cep, String logradouro, short number);
+    AddressModel findByCepAndLogradouroAndNumber(String cep, String logradouro, short number);
+    boolean existsByCepAndLogradouroAndNumber(String cep, String logradouro, short number);
 }

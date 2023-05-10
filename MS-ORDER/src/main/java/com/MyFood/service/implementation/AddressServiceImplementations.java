@@ -17,11 +17,11 @@ public class AddressServiceImplementations implements AddressService {
     }
 
     private AddressModel findAddressByInformations(AddressDto addressDto) {
-        return repository.findByCepAndLogradouroAndnumber(addressDto.cep(), addressDto.logradouro(), addressDto.number());
+        return repository.findByCepAndLogradouroAndNumber(addressDto.cep(), addressDto.logradouro(), addressDto.number());
     }
 
     private boolean existsAddressWithoutException(AddressDto addressDto) {
-        return repository.existsByCepAndLogradouroAndnumber(addressDto.cep(), addressDto.logradouro(), addressDto.number());
+        return repository.existsByCepAndLogradouroAndNumber(addressDto.cep(), addressDto.logradouro(), addressDto.number());
     }
 
     private AddressDto addressModelToAddressDto(AddressModel addressModel) {
