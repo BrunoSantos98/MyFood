@@ -14,6 +14,10 @@ public class Deliveryman {
     private UUID id;
     @Column(nullable = false,length = 50)
     private String name;
+    @Column(nullable = false, length = 15)
+    private String cpf;
+    @Column(nullable = false, length = 15)
+    private String phone;
     @Column(nullable = false,length = 50)
     private String automobile;
     @Column(nullable = false,length = 8)
@@ -23,9 +27,11 @@ public class Deliveryman {
 
     public Deliveryman() {}
 
-    public Deliveryman(UUID id, String name, String automobile, String licensePlate, String colorMobile) {
+    public Deliveryman(UUID id, String name, String cpf, String phone, String automobile, String licensePlate, String colorMobile) {
         this.id = id;
         this.name = name;
+        this.cpf = cpf;
+        this.phone = phone;
         this.automobile = automobile;
         this.licensePlate = licensePlate;
         this.colorMobile = colorMobile;
@@ -45,6 +51,22 @@ public class Deliveryman {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getAutomobile() {

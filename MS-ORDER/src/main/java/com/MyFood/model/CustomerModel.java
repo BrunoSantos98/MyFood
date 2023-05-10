@@ -16,6 +16,8 @@ public class CustomerModel {
     private UUID id;
     @Column(nullable = false, length = 80)
     private String name;
+    @Column(nullable = false, length = 15)
+    private String cpf;
     @Column(nullable = false, length = 50)
     private String email;
     @Column(nullable = false, length = 15)
@@ -30,9 +32,10 @@ public class CustomerModel {
     public CustomerModel() {
     }
 
-    public CustomerModel(UUID id, String name, String email, String phone, Set<AddressModel> address, Set<OrderModel> orders) {
+    public CustomerModel(UUID id, String name, String cpf, String email, String phone, Set<AddressModel> address, Set<OrderModel> orders) {
         this.id = id;
         this.name = name;
+        this.cpf = cpf;
         this.email = email;
         this.phone = phone;
         this.address = address;
@@ -53,6 +56,14 @@ public class CustomerModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
     public String getEmail() {
