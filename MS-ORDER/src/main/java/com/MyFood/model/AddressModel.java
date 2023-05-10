@@ -1,4 +1,4 @@
-package com.MyFood.model;
+package com.MyFood.Address;
 
 import jakarta.persistence.*;
 
