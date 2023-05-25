@@ -3,6 +3,7 @@ package com.MyFood.service.implementation;
 import com.MyFood.model.OrderModel;
 import com.MyFood.repository.DeliverymanRepository;
 import com.MyFood.repository.OrderRepository;
+import com.MyFood.service.ItensService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,8 @@ class OrderServiceImplementationTest {
     private OrderRepository orderRepositoryepository;
     @Mock
     private DeliverymanRepository deliverymanRepository;
+    @Mock
+    private ItensService itensService;
     @InjectMocks
     private OrderServiceImplementation implementation;
 
