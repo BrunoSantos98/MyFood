@@ -10,4 +10,6 @@ public interface CustomerService {
     CustomerDto getCustomerByCpf(String cpf);
     CustomerDto getCustomerByEmail(String email);
     Set<AddressDto> getCustomerAddresses(String cpf);
+    CustomerDto updateUserData(CustomerDto customerDto, String cpf);
+    CustomerDto updateUserAddress(AddressDto address, String cpf);
 }

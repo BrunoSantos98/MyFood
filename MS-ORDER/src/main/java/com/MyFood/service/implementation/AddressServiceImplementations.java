@@ -55,6 +55,11 @@ public class AddressServiceImplementations implements AddressService {
     }
 
     @Override
+    public AddressModel getAddressModelByInformations(String cep, String logradouro, short number) {
+        return existsAddressOrThrowsException(cep,logradouro,number);
+    }
+
+    @Override
     public void deleteAddress(AddressDto addressDto) {
         AddressModel address = existsAddressOrThrowsException(addressDto.cep(), addressDto.logradouro(), addressDto.number());
         repository.delete(address);

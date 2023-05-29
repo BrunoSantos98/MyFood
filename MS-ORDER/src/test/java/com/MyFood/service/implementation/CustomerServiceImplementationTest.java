@@ -1,8 +1,10 @@
 package com.MyFood.service.implementation;
 
+import com.MyFood.dto.AddressDto;
 import com.MyFood.dto.CustomerDto;
 import com.MyFood.exceptions.ObjectConflictException;
 import com.MyFood.exceptions.ObjectRequiredNotFoundException;
+import com.MyFood.model.AddressModel;
 import com.MyFood.model.CustomerModel;
 import com.MyFood.repository.CustomerRepository;
 import com.MyFood.service.AddressService;
@@ -27,12 +29,10 @@ class CustomerServiceImplementationTest {
 
     @Mock
     private CustomerRepository repository;
-//    @Mock
-//    private AddressService AddressService;
+    @Mock
+    private AddressService addressService;
     @InjectMocks
     private CustomerServiceImplementation implementation;
-
-    //private AddressModel address = new AddressModel(UUID.randomUUID(), "01010-001", "rua 1", (short) 2, "Complemento", "bairro", "SP");
     private CustomerModel customer = new CustomerModel(UUID.randomUUID(), "name", "000.000.000-00", "email@email.com", "(11) 93255-6987", new HashSet<>(), new HashSet<>());
     private CustomerDto customerDto = new CustomerDto("name", "000.000.000-00", "email@email.com", "(11) 93255-6987", new HashSet<>(), new HashSet<>());
 
@@ -137,5 +137,86 @@ class CustomerServiceImplementationTest {
 
         verify(repository,times(1)).existsByCpf(customerDto.cpf());
         verify(repository,times(1)).findByCpf(customerDto.cpf());
+    }
+
+    @Test
+    @DisplayName("Atualiza os dados de um usuario")
+    void shouldBeUpdateCustomerData(){
+        CustomerModel customer002 = new CustomerModel(UUID.randomUUID(), "nome de verdade", "000.000.000-01", "emailteste@email.com", "(11) 93255-0000", null, null);
+        CustomerDto customerDto002 = new CustomerDto("nome de verdade", "000.000.000-01", "emailteste@email.com", "(11) 93255-0000", null, null);
+
+        given(repository.existsByCpf(customerDto.cpf())).willReturn(true);
+        given(repository.existsByCpf(customerDto002.cpf())).willReturn(false);
+        given(repository.existsByEmail(customerDto002.email())).willReturn(false);
+        given(repository.findByCpf(customerDto.cpf())).willReturn(customer);
+        given(repository.save(any(CustomerModel.class))).willReturn(customer002);
+
+        CustomerDto dtoTest = implementation.updateUserData(customerDto002, customerDto.cpf());
+
+        verify(repository,times(1)).existsByCpf(customerDto.cpf());
+        verify(repository,times(1)).existsByCpf(customerDto002.cpf());
+        verify(repository,times(1)).existsByEmail(customerDto002.email());
+        verify(repository,times(1)).findByCpf(customerDto.cpf());
+        verify(repository,times(1)).save(any(CustomerModel.class));
+        assertEquals(dtoTest.name(), customerDto002.name());
+        assertEquals(dtoTest.email(), customerDto002.email());
+        assertEquals(dtoTest.phone(), customerDto002.phone());
+        assertEquals(dtoTest.cpf(), customerDto002.cpf());
+    }
+
+    @Test
+    @DisplayName("Lança excessão ao atualizar os dados de um usuario")
+    void shouldBeThrowExceptionWhenUpdateCustomerData(){
+        CustomerModel customer002 = new CustomerModel(UUID.randomUUID(), "nome de verdade", "000.000.000-01", "emailteste@email.com", "(11) 93255-0000", null, null);
+        CustomerDto customerDto002 = new CustomerDto("nome de verdade", "000.000.000-01", "emailteste@email.com", "(11) 93255-0000", null, null);
+
+        given(repository.existsByCpf(customerDto.cpf())).willReturn(false);
+        given(repository.existsByCpf(customerDto002.cpf())).willReturn(false);
+        given(repository.existsByEmail(customerDto002.email())).willReturn(false);
+
+        ObjectRequiredNotFoundException e = assertThrows(ObjectRequiredNotFoundException.class,
+                () -> implementation.updateUserData(customerDto002, customerDto.cpf()));
+
+        verify(repository,times(1)).existsByCpf(customerDto.cpf());
+        verify(repository,times(1)).existsByCpf(customerDto002.cpf());
+        verify(repository,times(1)).existsByEmail(customerDto002.email());
+        verify(repository,times(0)).findByCpf(customerDto.cpf());
+        verify(repository,times(0)).save(customer002);
+        assertEquals("Os dados para alteração não foram encontrados a partir do cpf informado" ,e.getMessage());
+    }
+
+    @Test
+    @DisplayName("Atualiza endereço do cliente")
+    void shouldBeUpdateCustomerAddress(){
+        AddressModel addressModel = new AddressModel(UUID.randomUUID(), "01010-001", "rua 1", (short) 2, "Complemento", "bairro", "SP");
+        AddressDto address = new AddressDto("01010-001", "rua 1", (short) 2, "Complemento", "bairro", "SP");
+
+        given(addressService.getNewAddress(address)).willReturn(address);
+        given(addressService.getAddressModelByInformations(address.cep(), address.logradouro(), address.number())).willReturn(addressModel).willReturn(addressModel);
+        given(repository.existsByCpf(customerDto.cpf())).willReturn(true);
+        given(repository.findByCpf(customerDto.cpf())).willReturn(customer);
+        given(repository.save(any(CustomerModel.class))).willReturn(customer);
+
+        implementation.updateUserAddress(address, customerDto.cpf());
+
+        verify(repository,times(1)).existsByCpf(customerDto.cpf());
+        verify(repository,times(1)).findByCpf(customerDto.cpf());
+        verify(addressService,times(1)).getNewAddress(address);
+        verify(repository,times(1)).save(any(CustomerModel.class));
+    }
+
+    @Test
+    @DisplayName("Lança excessão ao tentar atualizar  o endereço do cliente")
+    void shouldBeThrowExceptionOnUpdateCustomerAddress(){
+        AddressDto address = new AddressDto("01010-001", "rua 1", (short) 2, "Complemento", "bairro", "SP");
+        given(repository.existsByCpf(customerDto.cpf())).willReturn(false);
+
+        ObjectRequiredNotFoundException e = assertThrows(ObjectRequiredNotFoundException.class,
+                () -> implementation.updateUserAddress(address, customerDto.cpf()));
+
+        verify(repository,times(1)).existsByCpf(customerDto.cpf());
+        verify(repository,times(0)).findByCpf(customerDto.cpf());
+        verify(addressService,times(0)).getNewAddress(address);
+        assertEquals("Os dados para alteração não foram encontrados a partir do cpf informado" ,e.getMessage());
     }
 }
