@@ -142,8 +142,8 @@ class CustomerServiceImplementationTest {
     @Test
     @DisplayName("Atualiza os dados de um usuario")
     void shouldBeUpdateCustomerData(){
-        CustomerModel customer002 = new CustomerModel(UUID.randomUUID(), "nome de verdade", "000.000.000-01", "emailteste@email.com", "(11) 93255-0000", null, null);
-        CustomerDto customerDto002 = new CustomerDto("nome de verdade", "000.000.000-01", "emailteste@email.com", "(11) 93255-0000", null, null);
+        CustomerModel customer002 = new CustomerModel(UUID.randomUUID(), "nome de verdade", "000.000.000-01", "emailteste@email.com", "(11) 93255-0000", new HashSet<>(), null);
+        CustomerDto customerDto002 = new CustomerDto("nome de verdade", "000.000.000-01", "emailteste@email.com", "(11) 93255-0000", new HashSet<>(), null);
 
         given(repository.existsByCpf(customerDto.cpf())).willReturn(true);
         given(repository.existsByCpf(customerDto002.cpf())).willReturn(false);
@@ -182,7 +182,7 @@ class CustomerServiceImplementationTest {
         verify(repository,times(1)).existsByEmail(customerDto002.email());
         verify(repository,times(0)).findByCpf(customerDto.cpf());
         verify(repository,times(0)).save(customer002);
-        assertEquals("Os dados para alteração não foram encontrados a partir do cpf informado" ,e.getMessage());
+        assertEquals("Cpf informado para busca não encontrado na base de dados" ,e.getMessage());
     }
 
     @Test
@@ -217,6 +217,33 @@ class CustomerServiceImplementationTest {
         verify(repository,times(1)).existsByCpf(customerDto.cpf());
         verify(repository,times(0)).findByCpf(customerDto.cpf());
         verify(addressService,times(0)).getNewAddress(address);
-        assertEquals("Os dados para alteração não foram encontrados a partir do cpf informado" ,e.getMessage());
+        assertEquals("Cpf informado para busca não encontrado na base de dados" ,e.getMessage());
+    }
+
+    @Test
+    @DisplayName("Deleta um usuario")
+    void shouldBeDeleteACustomer(){
+        given(repository.existsByCpf(customerDto.cpf())).willReturn(true);
+        given(repository.findByCpf(customerDto.cpf())).willReturn(customer);
+
+        implementation.deleteCustomer(customerDto.cpf());
+
+        verify(repository,times(1)).existsByCpf(customerDto.cpf());
+        verify(repository,times(1)).findByCpf(customerDto.cpf());
+        verify(repository,times(1)).delete(customer);
+    }
+
+    @Test
+    @DisplayName("Lança exception ao deletar um usuario")
+    void shouldBeThrowExceptionToDeleteACustomer(){
+        given(repository.existsByCpf(customerDto.cpf())).willReturn(false);
+
+        ObjectRequiredNotFoundException e = assertThrows(ObjectRequiredNotFoundException.class,
+                () -> implementation.deleteCustomer(customerDto.cpf()));
+
+        verify(repository,times(1)).existsByCpf(customerDto.cpf());
+        verify(repository,times(0)).findByCpf(customerDto.cpf());
+        verify(repository,times(0)).delete(customer);
+        assertEquals("Cpf informado para busca não encontrado na base de dados" ,e.getMessage());
     }
 }

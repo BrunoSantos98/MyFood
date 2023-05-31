@@ -5,6 +5,7 @@ import com.MyFood.exceptions.ObjectRequiredNotFoundException;
 import com.MyFood.model.AddressModel;
 import com.MyFood.repository.AddressRepository;
 import com.MyFood.service.AddressService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,6 +39,7 @@ public class AddressServiceImplementations implements AddressService {
     }
 
     @Override
+    @Transactional
     public AddressDto getNewAddress(AddressDto addressDto) {
         if(existsAddressWithoutException(addressDto)){
             return addressDto;
@@ -60,6 +62,7 @@ public class AddressServiceImplementations implements AddressService {
     }
 
     @Override
+    @Transactional
     public void deleteAddress(AddressDto addressDto) {
         AddressModel address = existsAddressOrThrowsException(addressDto.cep(), addressDto.logradouro(), addressDto.number());
         repository.delete(address);

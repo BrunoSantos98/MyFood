@@ -12,4 +12,5 @@ public interface CustomerService {
     Set<AddressDto> getCustomerAddresses(String cpf);
     CustomerDto updateUserData(CustomerDto customerDto, String cpf);
     CustomerDto updateUserAddress(AddressDto address, String cpf);
+    void deleteCustomer(String cpf);
 }

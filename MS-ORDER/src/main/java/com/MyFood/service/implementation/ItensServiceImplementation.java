@@ -4,9 +4,12 @@ import com.MyFood.dto.ItemDto;
 import com.MyFood.model.ItensModel;
 import com.MyFood.repository.ItensRepository;
 import com.MyFood.service.ItensService;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class ItensServiceImplementation implements ItensService {
 
     private final ItensRepository repository;
@@ -16,6 +19,7 @@ public class ItensServiceImplementation implements ItensService {
     }
 
     @Override
+    @Transactional
     public ItemDto createNewItem(ItemDto itemDto) {
         Optional<ItensModel> findItem =
                 repository.findByNameAndValueAndQuantity(itemDto.name(), itemDto.price(), itemDto.quantity());
@@ -29,6 +33,7 @@ public class ItensServiceImplementation implements ItensService {
     }
 
     @Override
+    @Transactional
     public String deleteItem(ItemDto itemDto) {
         Optional<ItensModel> findItem =
                 repository.findByNameAndValueAndQuantity(itemDto.name(), itemDto.price(), itemDto.quantity());

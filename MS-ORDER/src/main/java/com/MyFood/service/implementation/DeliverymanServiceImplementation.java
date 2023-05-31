@@ -7,6 +7,7 @@ import com.MyFood.exceptions.ObjectRequiredNotFoundException;
 import com.MyFood.model.Deliveryman;
 import com.MyFood.repository.DeliverymanRepository;
 import com.MyFood.service.DeliveryManService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class DeliverymanServiceImplementation implements DeliveryManService {
     }
 
     @Override
+    @Transactional
     public DeliverymanDto createNewDeliveryman(DeliverymanDto deliveryman) {
 
         verifyDeliverymanNotExists(deliveryman);
@@ -78,6 +80,7 @@ public class DeliverymanServiceImplementation implements DeliveryManService {
     }
 
     @Override
+    @Transactional
     public void deleteDeliveryman(String deliverymanInformation, String typeInformation) {
         switch(typeInformation.toLowerCase()){
             case "cpf":

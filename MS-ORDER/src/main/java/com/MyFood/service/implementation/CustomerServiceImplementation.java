@@ -11,10 +11,13 @@ import com.MyFood.service.AddressService;
 import com.MyFood.service.CustomerService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Service
 public class CustomerServiceImplementation implements CustomerService {
 
     private final CustomerRepository repository;
@@ -50,8 +53,10 @@ public class CustomerServiceImplementation implements CustomerService {
     }
 
     private CustomerDto getCustomerDtoByCustomerModel(CustomerModel customerModel){
+        Set<AddressDto> addressDto = new HashSet<>();
+        addressDto.addAll(customerModel.getAddress().stream().map(this::addressModelToAddressDto).collect(Collectors.toList()));
         return new CustomerDto(customerModel.getName(), customerModel.getCpf(), customerModel.getEmail(),
-                customerModel.getPhone(), customerModel.getAddress(), customerModel.getOrders());
+                customerModel.getPhone(), addressDto, customerModel.getOrders());
     }
 
     private AddressDto addressModelToAddressDto(AddressModel addressModel) {
@@ -59,13 +64,22 @@ public class CustomerServiceImplementation implements CustomerService {
                 addressModel.getComplemento(), addressModel.getBairro(), addressModel.getUf());
     }
 
+    private CustomerModel getCustomerModelByCpf(String cpf){
+        if(verifyCpfExists(cpf)){
+            return repository.findByCpf(cpf);
+        }else{
+            throw new ObjectRequiredNotFoundException("Cpf informado para busca não encontrado na base de dados");
+        }
+    }
+
     @Transactional
     @Override
     public CustomerDto createnewCustomer(CustomerDto customerDto) {
         checkIfCpfDoesNotExist(customerDto.cpf());
         checkIfEmailDoesNotExist(customerDto.email());
+
         return getCustomerDtoByCustomerModel(repository.save(new CustomerModel(null, customerDto.name(),
-                customerDto.cpf(), customerDto.email(), customerDto.phone(), customerDto.address(),
+                customerDto.cpf(), customerDto.email(), customerDto.phone(), null,
                 customerDto.orders())));
     }
 
@@ -90,7 +104,7 @@ public class CustomerServiceImplementation implements CustomerService {
     @Override
     public Set<AddressDto> getCustomerAddresses(String cpf) {
         CustomerDto customerDto = getCustomerByCpf(cpf);
-        return customerDto.address().stream().map(this::addressModelToAddressDto).collect(Collectors.toSet());
+        return customerDto.address();
     }
 
     @Transactional
@@ -98,25 +112,23 @@ public class CustomerServiceImplementation implements CustomerService {
     public CustomerDto updateUserData(CustomerDto customerDto, String cpf) {
         checkIfCpfDoesNotExist(customerDto.cpf());
         checkIfEmailDoesNotExist(customerDto.email());
-        if(verifyCpfExists(cpf)){
-            CustomerModel model = repository.findByCpf(cpf);
-            BeanUtils.copyProperties(customerDto, model);
-            return getCustomerDtoByCustomerModel(repository.save(model));
-        }else{
-            throw new ObjectRequiredNotFoundException("Os dados para alteração não foram encontrados a partir do cpf informado");
-        }
+
+        CustomerModel model = getCustomerModelByCpf(cpf);
+        BeanUtils.copyProperties(customerDto, model);
+        return getCustomerDtoByCustomerModel(repository.save(model));
     }
 
     @Override
     public CustomerDto updateUserAddress(AddressDto address, String cpf) {
-        if(verifyCpfExists(cpf)){
-            CustomerModel customer = repository.findByCpf(cpf);
+            CustomerModel customer = getCustomerModelByCpf(cpf);
             addressService.getNewAddress(address);
             AddressModel addressModel = addressService.getAddressModelByInformations(address.cep(), address.logradouro(), address.number());
             customer.getAddress().add(addressModel);
             return getCustomerDtoByCustomerModel(repository.save(customer));
-        }else{
-            throw new ObjectRequiredNotFoundException("Os dados para alteração não foram encontrados a partir do cpf informado");
-        }
+    }
+
+    @Override
+    public void deleteCustomer(String cpf) {
+        repository.delete(getCustomerModelByCpf(cpf));
     }
 }
