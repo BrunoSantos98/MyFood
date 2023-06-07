@@ -59,8 +59,9 @@ public class CustomerControllerImplementation implements CustomerController {
     }
 
     @Override
-    @DeleteMapping
-    public ResponseEntity<String> deleteCustomer(String cpf) {
+    @DeleteMapping("/{cpf}")
+    public ResponseEntity<String> deleteCustomer(@PathVariable String cpf) {
+        service.deleteCustomer(cpf);
         return ResponseEntity.ok("Usuario deletado com sucesso");
     }
 }

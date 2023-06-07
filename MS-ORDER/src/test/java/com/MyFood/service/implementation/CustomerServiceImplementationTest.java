@@ -6,6 +6,7 @@ import com.MyFood.exceptions.ObjectConflictException;
 import com.MyFood.exceptions.ObjectRequiredNotFoundException;
 import com.MyFood.model.AddressModel;
 import com.MyFood.model.CustomerModel;
+import com.MyFood.model.OrderModel;
 import com.MyFood.repository.CustomerRepository;
 import com.MyFood.service.AddressService;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,8 +35,10 @@ class CustomerServiceImplementationTest {
     private AddressService addressService;
     @InjectMocks
     private CustomerServiceImplementation implementation;
-    private CustomerModel customer = new CustomerModel(UUID.randomUUID(), "name", "000.000.000-00", "email@email.com", "(11) 93255-6987", new HashSet<>(), new HashSet<>());
-    private CustomerDto customerDto = new CustomerDto("name", "000.000.000-00", "email@email.com", "(11) 93255-6987", new HashSet<>(), new HashSet<>());
+    private AddressModel addressModel = new AddressModel(UUID.randomUUID(), "01010-001", "rua 1", (short) 2, "Complemento", "bairro", "SP");
+    private AddressDto address = new AddressDto("01010-001", "rua 1", (short) 2, "Complemento", "bairro", "SP");
+    private CustomerModel customer = new CustomerModel(UUID.randomUUID(), "name", "000.000.000-00", "email@email.com", "(11) 93255-6987", Set.of(addressModel), new HashSet<>());
+    private CustomerDto customerDto = new CustomerDto("name", "000.000.000-00", "email@email.com", "(11) 93255-6987", Set.of(address), new HashSet<>());
 
     @Test
     @DisplayName("Cria um Novo cliente")
@@ -188,21 +192,19 @@ class CustomerServiceImplementationTest {
     @Test
     @DisplayName("Atualiza endereço do cliente")
     void shouldBeUpdateCustomerAddress(){
-        AddressModel addressModel = new AddressModel(UUID.randomUUID(), "01010-001", "rua 1", (short) 2, "Complemento", "bairro", "SP");
-        AddressDto address = new AddressDto("01010-001", "rua 1", (short) 2, "Complemento", "bairro", "SP");
-
-        given(addressService.getNewAddress(address)).willReturn(address);
-        given(addressService.getAddressModelByInformations(address.cep(), address.logradouro(), address.number())).willReturn(addressModel).willReturn(addressModel);
         given(repository.existsByCpf(customerDto.cpf())).willReturn(true);
         given(repository.findByCpf(customerDto.cpf())).willReturn(customer);
+        given(addressService.getNewAddress(address)).willReturn(address);
+        given(addressService.getAddressModelByInformations(address.cep(), address.logradouro(), address.number())).willReturn(addressModel);
         given(repository.save(any(CustomerModel.class))).willReturn(customer);
 
         implementation.updateUserAddress(address, customerDto.cpf());
 
         verify(repository,times(1)).existsByCpf(customerDto.cpf());
         verify(repository,times(1)).findByCpf(customerDto.cpf());
-        verify(addressService,times(1)).getNewAddress(address);
         verify(repository,times(1)).save(any(CustomerModel.class));
+        verify(addressService,times(1)).getNewAddress(address);
+        verify(addressService,times(1)).getAddressModelByInformations(address.cep(), address.logradouro(), address.number());
     }
 
     @Test
@@ -218,6 +220,31 @@ class CustomerServiceImplementationTest {
         verify(repository,times(0)).findByCpf(customerDto.cpf());
         verify(addressService,times(0)).getNewAddress(address);
         assertEquals("Cpf informado para busca não encontrado na base de dados" ,e.getMessage());
+    }
+
+    @Test
+    @DisplayName("Adiicona uma nova order no Customer")
+    void shouldBeAddOrderInCustomer(){
+        given(repository.existsByCpf(customerDto.cpf())).willReturn(true);
+        given(repository.findByCpf(customerDto.cpf())).willReturn(customer);
+
+        implementation.addOrderInCustomer(new OrderModel(),customerDto.cpf());
+
+        verify(repository,times(1)).existsByCpf(customerDto.cpf());
+        verify(repository,times(1)).findByCpf(customerDto.cpf());
+    }
+
+    @Test
+    @DisplayName("Adiicona uma nova order no Customer")
+    void shouldBeThrowExceptionWhenTryAddOrderInCustomer(){
+        given(repository.existsByCpf(customerDto.cpf())).willReturn(false);
+
+        ObjectRequiredNotFoundException e = assertThrows(ObjectRequiredNotFoundException.class,
+                () -> implementation.addOrderInCustomer(new OrderModel(),customerDto.cpf()));
+
+        verify(repository,times(1)).existsByCpf(customerDto.cpf());
+        verify(repository,times(0)).findByCpf(customerDto.cpf());
+        assertEquals("Cpf informado para busca não encontrado na base de dados", e.getMessage());
     }
 
     @Test
